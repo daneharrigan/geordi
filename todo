@@ -1,0 +1,42 @@
+# notes
+
+## commands
+
+* SET <key> <value>
+* GET <key>
+* LSET <key> <value>
+* LGET <key>
+* KEYS
+
+## todos
+
+* make SET work for strings and integers
+* make GET return strings and integers
+* response prefix is +/-
+
+- strings are always quoted
+- integers are never quoted
+
+## example
+
+```
+SET "key" "value"
+=> +OK
+
+GET "key"
+=> +"value"
+
+LSET "names" "dane"
+=> +OK
+
+LSET "names" "harrigan"
+=> +OK
+
+LIST "names"
+=>"dane"
+"harrigan"
+```
+
+Requests and responses end with `\r\n`. Arrays are returned with `\n`
+delimiters.
+
