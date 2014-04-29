@@ -1,5 +1,7 @@
 package command
 
+/*
+
 import (
 	"bufio"
 	"io"
@@ -99,3 +101,4 @@ func handlerGet(args []string) (string, error) {
 
 	return store.GetString(args[0])
 }
+*/

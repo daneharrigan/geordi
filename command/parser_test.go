@@ -2,6 +2,7 @@ package command_test
 
 import (
 	"testing"
+	"fmt"
 	"bytes"
 )
 
@@ -14,6 +15,7 @@ func TestParser(t *testing.T) {
 	var name string
 	var args [][]byte
 
+	println("at=TestParser")
 	name, args = parser(cmd1)
 	if name != "SET" {
 		fatalf(t, "SET", name)
@@ -30,30 +32,66 @@ func fatalf(t *testing.T, data ...interface{}) {
 
 // parser.go
 
-const (
-	CR = '\r'
-	LF = '\n'
-	Esc = '\\'
-)
-
 func parser(b []byte) (name string, args [][]byte) {
+println("at=start")
 	var quoted, escaped bool
 	var i, s, f int
 	var c byte
 garbage:
+	println("at=garbage")
 	c = b[i]
-	switch {
-	case c == CR && (quoted || escaped):
-		fallthrough
-	case c == LF && (quoted || escaped):
+	switch c {
+	case '\n', '\r', '\t', ' ':
 		i++
+		goto garbage
+	default:
 		goto content
 	}
 content:
-	c = b[i]
-	switch {
-	case c == Esc:
+	fmt.Printf("at=content i=%d\n", i)
+	if len(b) == i {
+		return
 	}
-finish:
+
+	c = b[i]
+	switch c {
+	case '"':
+		i++
+		if !quoted {
+			quoted = true
+			s = i
+		} else if quoted && escaped {
+			quoted = true
+			escaped = false
+		} else if quoted {
+			f = i
+			quoted = false
+		}
+
+		goto content
+	case '\\':
+		escaped = !escaped
+		i++
+		goto content
+	case ' ':
+		if escaped {
+			i++
+		} else {
+			f = i
+			if name == "" {
+				fmt.Printf("s=%d f=%d\n", s, f)
+				name = string(b[s:f])
+				return
+			} else {
+				args = append(args, b[s:f])
+			}
+		}
+
+		goto content
+	default:
+		i++
+		goto content
+	}
+
 	return
 }
