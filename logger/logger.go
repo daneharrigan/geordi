@@ -44,6 +44,6 @@ func Errorln(s string) {
 	Errorf(s)
 }
 
-func printf(format string, args... interface{}) {
+func printf(format string, args ...interface{}) {
 	fmt.Printf(format+"\n", args...)
 }

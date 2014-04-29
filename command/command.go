@@ -1,104 +1,75 @@
 package command
 
-/*
-
 import (
 	"bufio"
-	"io"
 	"errors"
+	"github.com/daneharrigan/geordi/store"
+	"io"
 )
 
-const (
-	String kind = iota
-	Int
-)
+type Handler func([][]byte) ([]byte, error)
 
-type kind int
-
-type argument struct {
-	kind kind
-	value interface{}
+type Command interface {
+	Run() ([]byte, error)
 }
 
 type command struct {
-	name string
-	arguments []argument
+	handler Handler
+	args    [][]byte
 }
-
-type Command interface {
-	Run() (string, error)
-}
-
-type Handler func([]string) (string, error)
 
 var (
-	commands map[string]Handler
-	NotFound error
-	InvalidArguments error
+	NotFound    = errors.New("command not found")
+	InvalidArgs = errors.New("invalid arguments")
+	commands    = make(map[string]Handler)
 )
 
 func init() {
-	NotFound = errors.New("command not found")
-	InvalidArguments = errors.New("invalid arguments")
-
-	commands = make(map[string]Handler)
-	commands["SET"] = handlerSet
-	commands["GET"] = handlerGet
+	commands["SET"] = set
+	commands["GET"] = get
+	commands["KEYS"] = keys
 }
 
-func Parse(r io.Reader) (c Command, err error){
+func Parse(r io.Reader) (Command, error) {
 	s := bufio.NewScanner(r)
 	s.Split(bufio.ScanWords)
-	if s.Scan() {
-		c.name = s.Text()
-	}
 
-	for s.Scan() {
-		str := s.Text()
-		var v interface{}
-		var k kind
-
-		if str[:1] == `"` {
-			v, err = strconv.Unquote(str)
-			k = String
-		} else {
-			var n int64
-			v, err = strconv.ParseInt(v, 0, 64)
-			k = Int
-		}
-
-		if err != nil {
-			return
-		}
-
-		c.arguments = append(c.arguments, argument{k, v})
-	}
-
-	return
-}
-
-func (c command) Run() (string, error) {
-	fn, ok := commands[c.name]
+	name := s.Text()
+	fn, ok := commands[name]
 	if !ok {
-		return "", NotFound
-
+		return nil, NotFound
 	}
-	return fn(c.arguments)
+
+	var args [][]byte
+	for s.Scan() {
+		args = append(args, s.Bytes())
+	}
+
+	return command{fn, args}, nil
 }
 
-func handlerSet(args []string) (string, error) {
+func (c command) Run() ([]byte, error) {
+	return c.handler(c.args)
+}
+
+func set(args [][]byte) ([]byte, error) {
 	if len(args) != 2 {
-		return "", InvalidArguments
+		return nil, InvalidArgs
 	}
 
-	return store.SetString(args[0], args[1])
+	k := string(args[0])
+	v := store.NewValue(args[1])
+	return store.Set(k, v)
 }
 
-func handlerGet(args []string) (string, error) {
+func get(args [][]byte) ([]byte, error) {
 	if len(args) != 1 {
-		return "", InvalidArguments
+		return nil, InvalidArgs
 	}
 
-	return store.GetString(args[0])
+	return store.Get(string(args[0]))
 }
-*/
+
+func keys(_ [][]byte) ([]byte, error) {
+	return store.Keys()
+}

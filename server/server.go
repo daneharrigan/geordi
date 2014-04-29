@@ -1,11 +1,11 @@
 package server
 
 import (
-	"github.com/daneharrigan/geordi/logger"
 	"github.com/daneharrigan/geordi/command"
+	"github.com/daneharrigan/geordi/logger"
 	"github.com/daneharrigan/geordi/respond"
-	"os"
 	"net"
+	"os"
 )
 
 func Run(port string) {
