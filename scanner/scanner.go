@@ -1,5 +1,7 @@
 package scanner
 
+// https://gist.github.com/daneharrigan/dd51c0e02d156c0259ba
+
 type Scanner struct {
 	b []byte
 	e error

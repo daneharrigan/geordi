@@ -34,3 +34,16 @@ func TestScan(t *testing.T) {
 		t.Fatalf("expected %v; was %q", nil, s.Err())
 	}
 }
+
+func TestScanErrCmd(t *testing.T) {
+	b := []byte("CMD1")
+	s := scanner.New(b)
+	if s.Scan() {
+		t.Fatalf("expected %v; was %v", false, true)
+	}
+
+	if s.Err() != scanner.ErrUnexpectedCmdChr {
+		t.Fatalf("expected %q; was %q", scanner.ErrUnexpectedCmdChr,
+			s.Err())
+	}
+}
