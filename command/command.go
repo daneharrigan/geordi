@@ -1,5 +1,9 @@
 package command
 
-func Execute(operation []byte) ([]byte, error) {
-	return nil, nil
+import (
+	"github.com/daneharrigan/geordi/responder"
+)
+
+func Execute(operation []byte, respond *responder.Responder) error {
+	return nil
 }

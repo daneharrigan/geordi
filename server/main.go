@@ -4,6 +4,7 @@ import (
 	"github.com/daneharrigan/geordi/logger"
 	"github.com/daneharrigan/geordi/types"
 	"github.com/daneharrigan/geordi/command"
+	"github.com/daneharrigan/geordi/responder"
 	"crypto/tls"
 	"flag"
 	"os"
@@ -65,7 +66,7 @@ func config() *tls.Config {
 
 func handle(conn net.Conn) {
 	reader := bufio.NewReader(conn)
-	writer := bufio.NewWriter(conn)
+	respond := responder.NewResponder(conn)
 
 	for {
 		operation, err := reader.ReadBytes('\r')
@@ -75,23 +76,14 @@ func handle(conn net.Conn) {
 			return
 		}
 
-		response, err := command.Execute(operation)
-		if err != nil {
-			writer.WriteByte('-')
-			writer.WriteString(err.Error())
-		} else {
-			writer.WriteByte('+')
-			writer.Write(response)
-
+		if err := command.Execute(operation, respond); err != nil {
+			logger.Errorf("ns=server fn=Execute error=%q", err)
 		}
 
-		writer.WriteByte('\r')
-		if err := writer.Flush(); err != nil {
+		if err := respond.Flush(); err != nil {
 			logger.Errorf("ns=server fn=Flush error=%q", err)
 			conn.Close()
 			return
 		}
-
-		writer.Reset(conn)
 	}
 }
