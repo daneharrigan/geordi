@@ -77,9 +77,13 @@ func get(respond *responder.Responder, args []Argument) {
 	}
 
 	b := record.Value.([]byte)
-
 	respond.SetSuccess()
-	respond.Write(b)
+
+	if record.Type == types.String {
+		respond.WriteString(string(b))
+	} else {
+		respond.Write(b)
+	}
 }
 
 func set(respond *responder.Responder, args []Argument) {
