@@ -16,12 +16,19 @@ var (
 
 func main() {
 	flag.Parse()
-	conn, err := tls.Dial("tcp", addr(), config())
-	if err != nil {
-		logger.Errorf("ns=client fn=Dial error=%q", err)
-		os.Exit(1)
-	}
+	for {
+		conn, err := tls.Dial("tcp", addr(), config())
+		if err != nil {
+			logger.Errorf("ns=client fn=Dial error=%q", err)
+			os.Exit(1)
+		}
 
+		accept(conn)
+		logger.Infof("ns=client at=reconnect")
+	}
+}
+
+func accept(conn *tls.Conn) {
 	reader := bufio.NewReader(conn)
 	writer := bufio.NewWriter(conn)
 	stdin := bufio.NewReader(os.Stdin)
@@ -31,20 +38,20 @@ func main() {
 		b, err := stdin.ReadBytes('\n')
 		if err != nil {
 			logger.Errorf("ns=client fn=ReadBytes error=%q", err)
-			continue
+			return
 		}
 
 		writer.Write(b)
 		writer.WriteByte('\r')
 		if err := writer.Flush(); err != nil {
 			logger.Errorf("ns=client fn=Flush error=%q", err)
-			os.Exit(1)
+			return
 		}
 
 		b, err = reader.ReadBytes('\r')
 		if err != nil {
 			logger.Errorf("ns=client fn=ReadBytes error=%q", err)
-			continue
+			return
 		}
 
 		fmt.Printf("%s\n", b)
