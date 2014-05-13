@@ -2,8 +2,8 @@ package responder
 
 import (
 	"bytes"
-	"io"
 	"fmt"
+	"io"
 )
 
 type Responder struct {

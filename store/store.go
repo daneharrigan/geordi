@@ -1,19 +1,19 @@
 package store
 
 import (
-	"github.com/daneharrigan/geordi/types"
 	"errors"
+	"github.com/daneharrigan/geordi/types"
 	"strconv"
 )
 
 var (
-	store = make(map[string]*Record)
+	store       = make(map[string]*Record)
 	ErrNotFound = errors.New("record not found")
 )
 
 type Record struct {
 	Value interface{}
-	Type types.Type
+	Type  types.Type
 }
 
 func NewRecord(v interface{}, t types.Type) *Record {

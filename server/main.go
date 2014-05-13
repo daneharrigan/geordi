@@ -1,14 +1,14 @@
 package main
 
 import (
-	"github.com/daneharrigan/geordi/logger"
-	"github.com/daneharrigan/geordi/command"
-	"github.com/daneharrigan/geordi/responder"
+	"bufio"
 	"crypto/tls"
 	"flag"
-	"os"
+	"github.com/daneharrigan/geordi/command"
+	"github.com/daneharrigan/geordi/logger"
+	"github.com/daneharrigan/geordi/responder"
 	"net"
-	"bufio"
+	"os"
 )
 
 var (
@@ -48,7 +48,7 @@ func config() *tls.Config {
 	}
 
 	return &tls.Config{
-		ClientAuth: tls.NoClientCert,
+		ClientAuth:   tls.NoClientCert,
 		Certificates: []tls.Certificate{crt},
 	}
 }

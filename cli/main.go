@@ -1,12 +1,12 @@
 package main
 
 import (
+	"bufio"
 	"crypto/tls"
+	"flag"
+	"fmt"
 	"github.com/daneharrigan/geordi/logger"
 	"os"
-	"fmt"
-	"bufio"
-	"flag"
 )
 
 var (
@@ -63,5 +63,5 @@ func addr() string {
 }
 
 func config() *tls.Config {
-	return &tls.Config{ InsecureSkipVerify: true }
+	return &tls.Config{InsecureSkipVerify: true}
 }
