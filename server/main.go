@@ -2,7 +2,6 @@ package main
 
 import (
 	"github.com/daneharrigan/geordi/logger"
-	"github.com/daneharrigan/geordi/types"
 	"github.com/daneharrigan/geordi/command"
 	"github.com/daneharrigan/geordi/responder"
 	"crypto/tls"
@@ -11,16 +10,6 @@ import (
 	"net"
 	"bufio"
 )
-
-type Operation struct {
-	Command string
-	Arguments []Argument
-}
-
-type Argument struct {
-	Value []byte
-	Type types.Type
-}
 
 var (
 	port = flag.String("port", "5000", "TLS Service Port")
