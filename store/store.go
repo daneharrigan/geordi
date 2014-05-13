@@ -16,11 +16,7 @@ type Record struct {
 }
 
 func NewRecord(v interface{}, t types.Type) *Record {
-	return *Record{v, t}
-}
-
-func Set(k string, r *Record) {
-	store[k] = r
+	return &Record{v, t}
 }
 
 func Set(k string, r *Record) {
