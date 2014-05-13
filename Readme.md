@@ -19,6 +19,9 @@ Geordi's wire protocol is meant to be simple and easy read and parse.
 client> SET "name" "Dane"
 server> + "OK"
 
+client> GET "an-error"
+server> - "record not found"
+
 client> GET "name"
 server> + "Dane"
 
