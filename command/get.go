@@ -29,12 +29,14 @@ func get(respond *responder.Responder, args []Argument) {
 		return
 	}
 
-	b := record.Value.([]byte)
 	respond.SetSuccess()
 
-	if record.Type == types.String {
-		respond.WriteString(string(b))
-	} else {
-		respond.Write(b)
+	switch record.Type {
+	case types.String:
+		respond.WriteString(record.String())
+	case types.Int:
+		respond.WriteInt(record.Int())
+	case types.Float:
+		respond.WriteFloat(record.Float())
 	}
 }
