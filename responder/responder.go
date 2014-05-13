@@ -17,11 +17,11 @@ func New(writer io.Writer) *Responder {
 	return responder
 }
 
-func (r *Responder) WriteError() {
+func (r *Responder) SetError() {
 	r.buffer.WriteByte('-')
 }
 
-func (r *Responder) WriteSuccess() {
+func (r *Responder) SetSuccess() {
 	r.buffer.WriteByte('+')
 }
 
@@ -31,6 +31,11 @@ func (r *Responder) Write(b []byte) {
 
 func (r *Responder) WriteString(s string) {
 	r.buffer.WriteString(s)
+}
+
+func (r *Responder) WriteError(err error) {
+	r.SetError()
+	r.buffer.WriteString(err.Error())
 }
 
 func (r *Responder) Flush() error {
