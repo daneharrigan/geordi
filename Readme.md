@@ -16,6 +16,17 @@ Geordi's wire protocol is meant to be simple and easy read and parse.
 * Error responses begin with a `-` character
 
 ```
+SET "name" "Dane"\r
++ "OK"\r
+GET "an-error"\r
+- "record not found"\r
+GET "name"\r
++ "Dane"\r
+```
+
+### Client/Server Interaction
+
+```
 client> SET "name" "Dane"
 server> + "OK"
 
