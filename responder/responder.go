@@ -3,6 +3,7 @@ package responder
 import (
 	"bytes"
 	"io"
+	"fmt"
 )
 
 type Responder struct {
@@ -40,6 +41,14 @@ func (r *Responder) WriteString(s string) {
 func (r *Responder) WriteError(err error) {
 	r.SetError()
 	r.WriteString(err.Error())
+}
+
+func (r *Responder) WriteInt(n int64) {
+	fmt.Fprintf(r.buffer, " %d", n)
+}
+
+func (r *Responder) WriteFloat(f float64) {
+	fmt.Fprintf(r.buffer, " %f", f)
 }
 
 func (r *Responder) Flush() error {
