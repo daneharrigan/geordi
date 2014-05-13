@@ -26,16 +26,20 @@ func (r *Responder) SetSuccess() {
 }
 
 func (r *Responder) Write(b []byte) {
+	r.buffer.WriteByte(' ')
 	r.buffer.Write(b)
 }
 
 func (r *Responder) WriteString(s string) {
+	r.buffer.WriteByte(' ')
+	r.buffer.WriteByte('"')
 	r.buffer.WriteString(s)
+	r.buffer.WriteByte('"')
 }
 
 func (r *Responder) WriteError(err error) {
 	r.SetError()
-	r.buffer.WriteString(err.Error())
+	r.WriteString(err.Error())
 }
 
 func (r *Responder) Flush() error {
