@@ -66,7 +66,7 @@ func config() *tls.Config {
 
 func handle(conn net.Conn) {
 	reader := bufio.NewReader(conn)
-	respond := responder.NewResponder(conn)
+	respond := responder.New(conn)
 
 	for {
 		operation, err := reader.ReadBytes('\r')

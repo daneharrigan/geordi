@@ -11,7 +11,7 @@ type Responder struct {
 	buffer *bytes.Buffer
 }
 
-func NewResponder(writer io.Writer) *Responder {
+func New(writer io.Writer) *Responder {
 	responder := &Responder{writer: writer}
 	responder.buffer = bytes.NewBuffer(responder.bytes)
 	return responder
