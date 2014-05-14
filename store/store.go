@@ -16,27 +16,25 @@ type Record struct {
 	Type  types.Type
 }
 
-func NewRecord(v interface{}, t types.Type) *Record {
+func NewRecord(b []byte, t types.Type) *Record {
 	r := &Record{Type: t}
 	switch t {
 	case types.Int:
-		s := string(v.([]byte))
-		i, err := strconv.ParseInt(s, 0, 64)
+		i, err := strconv.ParseInt(string(b), 0, 64)
 		if err != nil {
 			panic(err)
 		}
 
 		r.Value = i
 	case types.Float:
-		s := string(v.([]byte))
-		f, err := strconv.ParseFloat(s, 64)
+		f, err := strconv.ParseFloat(string(b), 64)
 		if err != nil {
 			panic(err)
 		}
 
 		r.Value = f
 	default:
-		r.Value = v
+		r.Value = b
 	}
 
 	return r
@@ -65,4 +63,9 @@ func (r *Record) Int() int64 {
 
 func (r *Record) Float() float64 {
 	return r.Value.(float64)
+}
+
+func (r *Record) Update(v interface{}, t types.Type) {
+	r.Type = t
+	r.Value = v
 }
