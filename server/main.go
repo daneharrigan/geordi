@@ -65,7 +65,7 @@ func handle(conn net.Conn) {
 			return
 		}
 
-		command.Execute(operation, respond)
+		command.Execute(operation[:len(operation)-1], respond)
 
 		if err := respond.Flush(); err != nil {
 			logger.Errorf("ns=server fn=Flush error=%q", err)
