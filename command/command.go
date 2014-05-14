@@ -22,13 +22,13 @@ var (
 	OK               = "OK"
 )
 
-func Execute(operation []byte, respond *responder.Responder) error {
+func Execute(operation []byte, respond *responder.Responder) {
 	s := scanner.New(operation)
 	s.Scan()
 
 	if s.Err() != nil {
 		respond.WriteError(s.Err())
-		return nil
+		return
 	}
 
 	idx := string(s.Bytes())
@@ -36,17 +36,23 @@ func Execute(operation []byte, respond *responder.Responder) error {
 
 	if !ok {
 		respond.WriteError(ErrNotFound)
-		return nil
+		return
 	}
 
-	fn(respond, arguments(s))
-	return nil
+	args, err := arguments(s)
+	if err != nil {
+		respond.WriteError(err)
+		return
+	}
+
+	fn(respond, args)
 }
 
-func arguments(s *scanner.Scanner) (args []Argument) {
+func arguments(s *scanner.Scanner) ([]Argument, error) {
+	var args []Argument
 	for s.Scan() {
 		args = append(args, Argument{s.Bytes(), s.Type()})
 	}
 
-	return
+	return args, s.Err()
 }
