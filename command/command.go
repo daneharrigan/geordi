@@ -5,6 +5,7 @@ import (
 	"github.com/daneharrigan/geordi/responder"
 	"github.com/daneharrigan/geordi/scanner"
 	"github.com/daneharrigan/geordi/types"
+	"github.com/daneharrigan/geordi/logger"
 )
 
 type Argument struct {
@@ -19,6 +20,7 @@ var (
 	ErrNotFound      = errors.New("command not found")
 	ErrArgumentCount = errors.New("invalid argument count")
 	ErrArgumentType  = errors.New("invalid argument type")
+	ErrCmdRecordType = errors.New("invalid command for record type")
 	OK               = "OK"
 )
 
@@ -40,6 +42,7 @@ func Execute(operation []byte, respond *responder.Responder) {
 	}
 
 	args, err := arguments(s)
+	logger.Debugf("fn=arguments operation=%q size=%d", operation, len(args))
 	if err != nil {
 		respond.WriteError(err)
 		return
@@ -51,6 +54,7 @@ func Execute(operation []byte, respond *responder.Responder) {
 func arguments(s *scanner.Scanner) ([]Argument, error) {
 	var args []Argument
 	for s.Scan() {
+		logger.Debugf("fn=Scan bytes=%q", s.Bytes())
 		args = append(args, Argument{s.Bytes(), s.Type()})
 	}
 

@@ -104,12 +104,11 @@ func (s *Scanner) argument() {
 
 		switch {
 		case c == ' ' || c == '\t' || c == '\n':
-			if s.f < s.i && !quoted {
+			if !quoted {
 				s.f = s.i - 1
-			}
-
-			if s.s > 0 && !quoted {
-				return
+				if s.s > 0 {
+					return
+				}
 			}
 		case c == '\r' && !quoted:
 			s.err = ErrUnexpectedCR

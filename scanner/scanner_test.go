@@ -63,6 +63,15 @@ func TestScan(t *testing.T) {
 			2,
 		},
 		{
+			[]byte(`CMD "key" 12`),
+			[]value{
+				{[]byte("CMD"), types.String},
+				{[]byte("key"), types.String},
+				{[]byte("12"), types.Int},
+			},
+			3,
+		},
+		{
 			[]byte(`CMD "key" "value" 1 -1 .5 0.5`),
 			[]value{
 				{[]byte("CMD"), types.String},
