@@ -63,6 +63,15 @@ func TestScan(t *testing.T) {
 			2,
 		},
 		{
+			[]byte(`CMD "key" 12`),
+			[]value{
+				{[]byte("CMD"), types.String},
+				{[]byte("key"), types.String},
+				{[]byte("12"), types.Int},
+			},
+			3,
+		},
+		{
 			[]byte(`CMD "key" "value" 1 -1 .5 0.5`),
 			[]value{
 				{[]byte("CMD"), types.String},
@@ -115,15 +124,15 @@ func TestScan(t *testing.T) {
 		s := New(o)
 		var i int
 
-		for n := 0; n < len(tt.values); n++ {
-			s.Scan()
-			v := tt.values[n]
-			a := v.b
-			b := s.Bytes()
+		for s.Scan() {
+			v := tt.values[i]
+			expected := v.b
+			was := s.Bytes()
 			i++
 
-			if !bytes.Equal(a, b) {
-				t.Fatalf("from %q, expected %q; was %q", o, a, b)
+			if !bytes.Equal(expected, was) {
+				t.Fatalf("from %q, expected %q; was %q", o,
+					expected, was)
 			}
 
 			if s.Type() != v.t {
@@ -136,10 +145,9 @@ func TestScan(t *testing.T) {
 			t.Fatalf("expected %q; was nil", s.Err())
 		}
 
-		if i < tt.size {
+		if i != tt.size {
 			t.Fatalf("expected %d; was %d", tt.size, i)
 		}
-
 	}
 }
 
