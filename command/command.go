@@ -19,6 +19,7 @@ var (
 	ErrNotFound      = errors.New("command not found")
 	ErrArgumentCount = errors.New("invalid argument count")
 	ErrArgumentType  = errors.New("invalid argument type")
+	ErrCmdRecordType = errors.New("invalid command for record type")
 	OK               = "OK"
 )
 
