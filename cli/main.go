@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"github.com/daneharrigan/geordi/logger"
 	"os"
+	"io"
 )
 
 var (
@@ -37,7 +38,9 @@ func accept(conn *tls.Conn) {
 		fmt.Print(">> ")
 		b, err := stdin.ReadBytes('\n')
 		if err != nil {
-			logger.Errorf("ns=client fn=ReadBytes error=%q", err)
+			if err != io.EOF {
+				logger.Errorf("ns=client fn=ReadBytes error=%q", err)
+			}
 			return
 		}
 
@@ -50,7 +53,9 @@ func accept(conn *tls.Conn) {
 
 		b, err = reader.ReadBytes('\r')
 		if err != nil {
-			logger.Errorf("ns=client fn=ReadBytes error=%q", err)
+			if err != io.EOF {
+				logger.Errorf("ns=client fn=ReadBytes error=%q", err)
+			}
 			return
 		}
 
