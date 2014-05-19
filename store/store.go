@@ -3,7 +3,6 @@ package store
 import (
 	"errors"
 	"github.com/daneharrigan/geordi/types"
-	"strconv"
 )
 
 var (
@@ -20,19 +19,9 @@ func NewRecord(b []byte, t types.Type) *Record {
 	r := &Record{Type: t}
 	switch t {
 	case types.Int:
-		i, err := strconv.ParseInt(string(b), 0, 64)
-		if err != nil {
-			panic(err)
-		}
-
-		r.Value = i
+		r.Value = types.ToInt(b)
 	case types.Float:
-		f, err := strconv.ParseFloat(string(b), 64)
-		if err != nil {
-			panic(err)
-		}
-
-		r.Value = f
+		r.Value = types.ToFloat(b)
 	default:
 		r.Value = b
 	}
