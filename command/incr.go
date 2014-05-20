@@ -50,7 +50,8 @@ func incr(respond *responder.Responder, args []Argument) {
 				respond.WriteInt(record.Int())
 			case types.Float:
 				n := types.ToFloat(arg.Value)
-				record.Update(float64(record.Int())+n, types.Float)
+				f := float64(record.Int())
+				record.Update(f+n, types.Float)
 
 				respond.SetSuccess()
 				respond.WriteFloat(record.Float())
