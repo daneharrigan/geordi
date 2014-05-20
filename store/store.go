@@ -8,12 +8,15 @@ import (
 var (
 	store       = make(map[string]*Record)
 	ErrNotFound = errors.New("record not found")
+	ErrHashValueNotFound = errors.New("hash value not found")
 )
 
 type Record struct {
 	Value interface{}
 	Type  types.Type
 }
+
+type Hash map[string]*Record
 
 func NewRecord(b []byte, t types.Type) *Record {
 	r := &Record{Type: t}
@@ -27,6 +30,13 @@ func NewRecord(b []byte, t types.Type) *Record {
 	}
 
 	return r
+}
+
+func NewHash() *Record {
+	return &Record{
+		Type: types.Hash,
+		Value: make(Hash),
+	}
 }
 
 func Set(k string, r *Record) {
@@ -52,6 +62,10 @@ func (r *Record) Int() int64 {
 
 func (r *Record) Float() float64 {
 	return r.Value.(float64)
+}
+
+func (r *Record) Hash() Hash {
+	return r.Value.(Hash)
 }
 
 func (r *Record) Update(v interface{}, t types.Type) {
