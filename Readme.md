@@ -2,6 +2,17 @@
 
 A key-value database written in Go.
 
+## Available Commands
+
+A `<value>` can be a string, integer, or float. These data types are explained
+in the protocol section.
+
+* **SET:** `SET "key" <value>`
+* **GET:** `GET "key"`
+* **INCR:** `INCR "key"` or by a specific value `INCR "key" 0.5`
+* **HSET:** `HSET "hash-key" "key" <value>`
+* **HGET:** `HGET "hash-key" "key"`
+
 ## Protocol
 
 Geordi's wire protocol is meant to be simple and easy read and parse.
